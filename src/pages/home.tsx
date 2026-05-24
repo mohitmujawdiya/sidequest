@@ -13,6 +13,7 @@ import {
   CheckCircle2,
   Clock3,
   Compass,
+  Dices,
   ImagePlus,
   Map,
   RefreshCcw,
@@ -705,6 +706,10 @@ function QuestStage({
   onSave: () => void
 }) {
   const Icon = quest.icon
+  // Same two buttons, same positions, in every state. Only the emphasis swaps:
+  // signed-out leads with the free Shuffle, signed-in leads with Accept.
+  const shufflePrimary = !isSignedIn && !isCompleted
+  const acceptPrimary = isSignedIn && !isCompleted
 
   return (
     <section
@@ -726,12 +731,6 @@ function QuestStage({
             </div>
             <TooltipProvider>
               <div className="flex shrink-0 items-center justify-end gap-1.5">
-                <QuestIconAction
-                  dataTestId="draw-quest-button"
-                  icon={DiceRailIcon}
-                  label="Shuffle sidequest"
-                  onClick={onDraw}
-                />
                 <QuestIconAction
                   icon={Bookmark}
                   label={isSaved ? 'Saved to log' : 'Save to log'}
@@ -794,45 +793,65 @@ function QuestStage({
             </p>
           </div>
 
-          {!isCompleted && (
-            <div
-              data-testid="accept-sidequest-panel"
-              className="mt-4 flex flex-col gap-3 rounded-lg border-2 border-[oklch(0.31_0.07_240)] bg-[oklch(0.985_0.018_93)] p-4 sidequest-mini-shadow sm:flex-row sm:items-center sm:justify-between"
-            >
-              <div className="min-w-0">
-                <h3 className="sidequest-display text-2xl font-black leading-none text-[oklch(0.22_0.06_240)]">
-                  Ready to run it?
-                </h3>
-              </div>
-              <Button
-                data-testid="accept-quest-button"
-                size="lg"
-                loading={pendingAction === 'accept'}
-                onClick={onAccept}
-                className="sidequest-button shrink-0 bg-[oklch(0.88_0.14_338)] text-[oklch(0.22_0.08_338)] hover:bg-[oklch(0.84_0.15_338)]"
-              >
-                <Trophy className="h-4 w-4" aria-hidden />
-                {isOngoing ? 'Open ongoing' : 'Accept sidequest'}
-              </Button>
-            </div>
-          )}
-
-          {isSignedIn && isCompleted && (
-            <div className="mt-4 rounded-lg border-2 border-[oklch(0.31_0.07_240)] bg-[oklch(0.92_0.055_205)] p-4 sidequest-mini-shadow">
+          <div
+            data-testid="accept-sidequest-panel"
+            className="mt-4 rounded-lg border-2 border-[oklch(0.31_0.07_240)] bg-[oklch(0.985_0.018_93)] p-4 sidequest-mini-shadow"
+          >
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="sidequest-display text-2xl font-black leading-none text-[oklch(0.22_0.06_240)]">
-                Memory saved
+                {isCompleted ? 'Memory saved' : 'Ready to run it?'}
               </h3>
-              <Button
-                asChild
-                className="sidequest-button mt-3 bg-[oklch(0.89_0.14_88)] text-[oklch(0.24_0.06_240)] hover:bg-[oklch(0.86_0.15_88)]"
-              >
-                <Link to="/quest-log">
-                  <ImagePlus className="h-4 w-4" aria-hidden />
-                  Open log
-                </Link>
-              </Button>
+              <div className="flex shrink-0 flex-wrap items-center gap-2">
+                <Button
+                  data-testid="draw-quest-button"
+                  size="lg"
+                  onClick={onDraw}
+                  className={cn(
+                    'sidequest-button',
+                    shufflePrimary
+                      ? 'bg-[oklch(0.68_0.18_205)] text-[oklch(0.15_0.06_240)] hover:bg-[oklch(0.64_0.18_205)]'
+                      : 'bg-[oklch(0.95_0.03_205)] text-[oklch(0.24_0.06_240)] hover:bg-[oklch(0.92_0.05_205)]',
+                  )}
+                >
+                  <Dices className="h-4 w-4" aria-hidden />
+                  Shuffle
+                </Button>
+                {isCompleted ? (
+                  <Button
+                    asChild
+                    size="lg"
+                    className="sidequest-button bg-[oklch(0.88_0.14_338)] text-[oklch(0.22_0.08_338)] hover:bg-[oklch(0.84_0.15_338)]"
+                  >
+                    <Link to="/quest-log">
+                      <ImagePlus className="h-4 w-4" aria-hidden />
+                      Open log
+                    </Link>
+                  </Button>
+                ) : (
+                  <Button
+                    data-testid="accept-quest-button"
+                    size="lg"
+                    loading={pendingAction === 'accept'}
+                    onClick={onAccept}
+                    className={cn(
+                      'sidequest-button',
+                      acceptPrimary
+                        ? 'bg-[oklch(0.88_0.14_338)] text-[oklch(0.22_0.08_338)] hover:bg-[oklch(0.84_0.15_338)]'
+                        : 'bg-[oklch(0.95_0.03_338)] text-[oklch(0.24_0.07_338)] hover:bg-[oklch(0.92_0.05_338)]',
+                    )}
+                  >
+                    <Trophy className="h-4 w-4" aria-hidden />
+                    {isOngoing ? 'Open ongoing' : 'Accept sidequest'}
+                  </Button>
+                )}
+              </div>
             </div>
-          )}
+            {!isSignedIn && (
+              <p className="mt-3 text-sm font-bold leading-6 text-[oklch(0.40_0.05_240)]">
+                Free to browse and do. Sign in to log your finishes, keep memories, and join the leaderboard.
+              </p>
+            )}
+          </div>
 
           {isSignedIn && !syncReady && (
             <p className="mt-4 text-sm font-bold text-muted-foreground">
@@ -997,19 +1016,6 @@ function QuestPill({
     >
       {children}
     </span>
-  )
-}
-
-function DiceRailIcon({ className }: { className?: string }) {
-  return (
-    <svg className={cn('sidequest-dice-icon', className)} viewBox="0 0 24 24" fill="none">
-      <rect className="sidequest-dice-face" x="3.25" y="3.25" width="17.5" height="17.5" rx="4.25" />
-      <circle className="sidequest-dice-pip" cx="8.1" cy="8.1" r="1.35" />
-      <circle className="sidequest-dice-pip" cx="15.9" cy="8.1" r="1.35" />
-      <circle className="sidequest-dice-pip" cx="12" cy="12" r="1.35" />
-      <circle className="sidequest-dice-pip" cx="8.1" cy="15.9" r="1.35" />
-      <circle className="sidequest-dice-pip" cx="15.9" cy="15.9" r="1.35" />
-    </svg>
   )
 }
 
