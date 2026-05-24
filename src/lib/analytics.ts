@@ -12,6 +12,7 @@ export type AnalyticsEventType =
   | 'cheer_memory'
   | 'favorite_memory'
   | 'sign_in_prompt'
+  | 'mascot_tap'
 
 export interface AnalyticsEventRecord {
   eventType: AnalyticsEventType

@@ -630,6 +630,7 @@ function SyncQuestStage({ stageRef }: { stageRef: RefObject<HTMLElement | null> 
 
 function QuestCompanionCard({ category }: { category: QuestCategory }) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
+  const track = useAnalytics()
 
   useEffect(() => {
     return () => {
@@ -639,6 +640,7 @@ function QuestCompanionCard({ category }: { category: QuestCategory }) {
   }, [])
 
   const playMascotAudio = () => {
+    track('mascot_tap', { category })
     const previousAudio = audioRef.current
     if (previousAudio) {
       previousAudio.pause()

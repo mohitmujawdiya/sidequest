@@ -40,6 +40,7 @@ const eventLabels: Record<AnalyticsEventType, string> = {
   cheer_memory: 'Cheer',
   favorite_memory: 'Favorite',
   sign_in_prompt: 'Sign-in prompt',
+  mascot_tap: 'Mascot tap',
 }
 
 const funnelEvents: Array<{ event: AnalyticsEventType; label: string; icon: ComponentType<{ className?: string }> }> = [
