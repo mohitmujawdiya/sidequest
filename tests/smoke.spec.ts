@@ -211,4 +211,36 @@ test.describe('Smoke tests', () => {
     await waitForApp(page)
     await expect(page.locator('text=404')).toBeVisible()
   })
+
+  test('feedback nav link is visible', async ({ page }) => {
+    await page.goto('/')
+    await waitForApp(page)
+    await expect(page.getByRole('link', { name: 'Feedback' })).toBeVisible()
+  })
+
+  test('feedback page shows the public form when logged out', async ({ page }) => {
+    await page.goto('/feedback')
+    await waitForApp(page)
+
+    await expect(page.getByTestId('feedback-heading')).toBeVisible()
+    await expect(page.getByTestId('feedback-form')).toBeVisible()
+    await expect(page.getByTestId('feedback-submit')).toBeVisible()
+  })
+
+  test('feedback requires a message before sending', async ({ page }) => {
+    await page.goto('/feedback')
+    await waitForApp(page)
+
+    await page.getByTestId('feedback-submit').click()
+    await expect(page.getByText('Add a little detail before sending.')).toBeVisible()
+  })
+
+  test('feedback submits without an account', async ({ page }) => {
+    await page.goto('/feedback')
+    await waitForApp(page)
+
+    await page.getByTestId('feedback-message').fill('Smoke test: add a quest about stargazing.')
+    await page.getByTestId('feedback-submit').click()
+    await expect(page.getByText('Thanks, it landed.')).toBeVisible()
+  })
 })

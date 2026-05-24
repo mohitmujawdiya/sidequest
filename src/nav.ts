@@ -19,6 +19,7 @@ export const nav: NavItem[] = [
   { path: '/quest-log', label: 'Log' },
   { path: '/community', label: 'Community' },
   { path: '/leaderboard', label: 'Leaderboard' },
+  { path: '/feedback', label: 'Feedback' },
   { path: '/analytics', label: 'Analytics', roles: ['admin'] },
   // ── Features add nav items below this line ──
 ]

@@ -11,6 +11,7 @@ import type { CollectionSchema } from 'deepspace/worker'
 import { usersSchema } from './schemas/users-schema'
 import { settingsSchema } from './schemas/admin-schema'
 import { analyticsEventsSchema } from './schemas/analytics-schema'
+import { feedbackSchema } from './schemas/feedback-schema'
 import {
   communityPostsSchema,
   communityReactionsSchema,
@@ -26,4 +27,5 @@ export const schemas: CollectionSchema[] = [
   communityPostsSchema,
   communityReactionsSchema,
   analyticsEventsSchema,
+  feedbackSchema,
 ]

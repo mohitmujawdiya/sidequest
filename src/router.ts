@@ -8,6 +8,7 @@ export type Path =
   | `/`
   | `/analytics`
   | `/community`
+  | `/feedback`
   | `/home`
   | `/leaderboard`
   | `/quest-log`
