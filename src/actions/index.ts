@@ -110,8 +110,13 @@ const completeSidequest: ActionHandler<Env> = async ({ userId, params, tools }) 
     ...(memoryPhoto ?? {}),
   }
 
+  // Step 1: write the completion record. The DO has no multi-record transactions,
+  // so steps 1–2 use compensating writes: if step 2 fails we undo step 1.
   let completionRecordId: string | null = null
   let createdCompletion = false
+  // Snapshot of fields overwritten in the dedup path, so we can revert if step 2 fails.
+  let previousCompletionSnapshot: Record<string, unknown> | null = null
+
   const completionResult = await tools.create(
     'quest_completions',
     completionPayload as unknown as Record<string, unknown>,
@@ -130,6 +135,15 @@ const completeSidequest: ActionHandler<Env> = async ({ userId, params, tools }) 
     if (!existingCompletion) return fail(completionResult.error)
 
     completionRecordId = existingCompletion.recordId
+    previousCompletionSnapshot = {
+      completedAt: existingCompletion.data.completedAt,
+      proofNote: existingCompletion.data.proofNote ?? null,
+      proofImageKey: existingCompletion.data.proofImageKey ?? null,
+      proofImageUrl: existingCompletion.data.proofImageUrl ?? null,
+      proofImageName: existingCompletion.data.proofImageName ?? null,
+      proofImageSize: existingCompletion.data.proofImageSize ?? null,
+      proofImageType: existingCompletion.data.proofImageType ?? null,
+    }
     const updateExisting = await tools.update(
       'quest_completions',
       existingCompletion.recordId,
@@ -144,6 +158,7 @@ const completeSidequest: ActionHandler<Env> = async ({ userId, params, tools }) 
     return fail(completionResult.error)
   }
 
+  // Step 2: flip the saved quest to 'completed'. If this fails, undo step 1.
   const savedUpdate = await tools.update('saved_quests', savedRecordId, {
     status: 'completed',
     completedAt,
@@ -151,6 +166,8 @@ const completeSidequest: ActionHandler<Env> = async ({ userId, params, tools }) 
   if (!savedUpdate.success) {
     if (createdCompletion && completionRecordId) {
       await tools.remove('quest_completions', completionRecordId)
+    } else if (previousCompletionSnapshot && completionRecordId) {
+      await tools.update('quest_completions', completionRecordId, previousCompletionSnapshot)
     }
     return fail(savedUpdate.error)
   }
@@ -159,6 +176,7 @@ const completeSidequest: ActionHandler<Env> = async ({ userId, params, tools }) 
     return ok<CompleteSidequestData>({ posted: false, xp: savedRecord.data.xp })
   }
 
+  // Step 3: community post is best-effort — completion is already committed above.
   const communityPayload: CommunityPostRecord = {
     userId: '',
     questId: savedRecord.data.questId,
