@@ -39,7 +39,7 @@ import { categoryStyles, difficultyStyles } from '../lib/quest-progress'
 type FilterValue<T extends string> = T | 'any'
 
 const DEEPSPACE_URL =
-  'https://deep.space?utm_source=sidequest&utm_medium=made-with-badge&utm_campaign=reddit'
+  'https://deep.space/about?utm_source=sidequest&utm_medium=made-with-badge&utm_campaign=reddit'
 
 /** Fires scroll_depth once per 25/50/75/100% milestone. The scroll container is the
  *  <main> in _app.tsx (overflow-y-auto), not window — so listen on the nearest <main>. */
@@ -116,7 +116,7 @@ function DeepSpaceQuestCard({ onClick }: { onClick: () => void }) {
             Build your own.
           </h2>
           <p className="mt-4 max-w-xl text-base font-bold leading-7 text-[oklch(0.28_0.07_338)]">
-            Sidequest is a real, live app built with DeepSpace. Yours could be next.
+            Sidequest is a real, live app built with the DeepSpace SDK. Yours could be next.
           </p>
         </div>
         <Button
@@ -125,7 +125,7 @@ function DeepSpaceQuestCard({ onClick }: { onClick: () => void }) {
           className="sidequest-button shrink-0 bg-[oklch(0.985_0.018_93)] text-[oklch(0.22_0.08_338)] hover:bg-[oklch(0.95_0.03_338)]"
         >
           <a href={DEEPSPACE_URL} target="_blank" rel="noopener noreferrer" onClick={onClick}>
-            Made with DeepSpace
+            Built with DeepSpace SDK
             <ArrowUpRight className="h-4 w-4" aria-hidden />
           </a>
         </Button>

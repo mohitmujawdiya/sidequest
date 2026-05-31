@@ -282,7 +282,7 @@ test.describe('Explore (auth-free landing)', () => {
     await expect(page.getByTestId('explore-made-with-badge')).toHaveCount(0)
 
     const cta = page.getByTestId('explore-deepspace-cta').getByRole('link')
-    await expect(cta).toHaveAttribute('href', /^https:\/\/deep\.space\?utm_source=sidequest/)
+    await expect(cta).toHaveAttribute('href', /^https:\/\/deep\.space\/about\?utm_source=sidequest/)
     await expect(cta).toHaveAttribute('href', /utm_campaign=reddit/)
     await expect(cta).toHaveAttribute('target', '_blank')
   })
