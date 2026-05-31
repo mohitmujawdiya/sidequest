@@ -244,3 +244,47 @@ test.describe('Smoke tests', () => {
     await expect(page.getByText('Thanks, it landed.')).toBeVisible()
   })
 })
+
+test.describe('Explore (auth-free landing)', () => {
+  async function waitForExplore(page: import('@playwright/test').Page) {
+    await page.waitForSelector('[data-testid="explore-root"]', { timeout: 15000 })
+  }
+
+  test('explore renders the landing with zero auth triggers', async ({ page }) => {
+    const errors = captureConsoleErrors(page)
+    await page.goto('/explore')
+    await waitForExplore(page)
+
+    await expect(page.getByTestId('home-heading')).toContainText('Bored? Accept a sidequest.')
+    await expect(page.getByTestId('draw-quest-button')).toBeVisible()
+    await expect(page.getByTestId('app-navigation')).toHaveCount(0)
+    await expect(page.getByTestId('nav-sign-in-button')).toHaveCount(0)
+    await expect(page.getByTestId('accept-quest-button')).toHaveCount(0)
+    await expect(page.locator('[data-testid="auth-overlay"]')).toHaveCount(0)
+    expect(errors).toEqual([])
+  })
+
+  test('explore shuffles the quest without auth', async ({ page }) => {
+    await page.goto('/explore')
+    await waitForExplore(page)
+
+    const title = page.getByTestId('quest-title')
+    const before = await title.textContent()
+    await page.getByTestId('draw-quest-button').click()
+    await expect(title).not.toHaveText(before ?? '')
+  })
+
+  test('explore Made-with-DeepSpace links carry the UTM url and open in a new tab', async ({ page }) => {
+    await page.goto('/explore')
+    await waitForExplore(page)
+
+    const badge = page.getByTestId('explore-made-with-badge')
+    await expect(badge).toBeVisible()
+    await expect(badge).toHaveAttribute('href', /^https:\/\/deep\.space\?utm_source=sidequest/)
+    await expect(badge).toHaveAttribute('target', '_blank')
+
+    const cta = page.getByTestId('explore-deepspace-cta').getByRole('link')
+    await expect(cta).toHaveAttribute('href', /utm_campaign=reddit/)
+    await expect(cta).toHaveAttribute('target', '_blank')
+  })
+})
