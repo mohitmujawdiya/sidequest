@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type ComponentType, type KeyboardEvent, type RefObject } from 'react'
+import { useEffect, useMemo, useRef, useState, type ComponentType, type KeyboardEvent, type ReactNode, type RefObject } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import {
   AuthOverlay,
@@ -64,11 +64,11 @@ const MASCOT_AUDIO_SOURCES = [
   '/audio/mascot-05.m4a',
 ]
 
-function createDeckSeed() {
+export function createDeckSeed() {
   return `${Date.now().toString(36)}-${Math.random().toString(36).slice(2)}`
 }
 
-function getStableQuest(pool: SideQuest[], seed: string) {
+export function getStableQuest(pool: SideQuest[], seed: string) {
   if (pool.length === 0) return null
   return pool[hashString(seed) % pool.length]
 }
@@ -507,7 +507,7 @@ export default function HomePage() {
   )
 }
 
-function SignedOutLanding() {
+export function SignedOutLanding({ subcopy }: { subcopy?: ReactNode }) {
   return (
     <section className="sidequest-panel flex flex-col justify-between overflow-hidden bg-[oklch(0.98_0.025_93)] p-5 sm:p-7 lg:min-h-[520px]">
       <div className="min-w-0">
@@ -522,7 +522,9 @@ function SignedOutLanding() {
           Bored? Accept a sidequest.
         </h1>
         <p className="mt-5 max-w-xl text-base font-bold leading-7 text-[oklch(0.39_0.055_240)] sm:text-lg sm:leading-8">
-          Browse a fresh real-world prompt from {quests.length} community-sourced cards. Sign in only when a memory is worth keeping.
+          {subcopy ?? (
+            <>Browse a fresh real-world prompt from {quests.length} community-sourced cards. Sign in only when a memory is worth keeping.</>
+          )}
         </p>
         <RitualTrail className="mt-5" />
       </div>
@@ -561,7 +563,7 @@ function RitualTrail({ className }: { className?: string }) {
   )
 }
 
-function EmptyQuestStage({
+export function EmptyQuestStage({
   onReset,
   reason,
   showReset,
@@ -628,7 +630,7 @@ function SyncQuestStage({ stageRef }: { stageRef: RefObject<HTMLElement | null> 
   )
 }
 
-function QuestCompanionCard({ category }: { category: QuestCategory }) {
+export function QuestCompanionCard({ category }: { category: QuestCategory }) {
   const audioRef = useRef<HTMLAudioElement | null>(null)
   const track = useAnalytics()
 
@@ -870,7 +872,7 @@ function QuestStage({
   )
 }
 
-function ChipGroup({
+export function ChipGroup({
   label,
   options,
   value,
@@ -916,7 +918,7 @@ function ChipGroup({
   )
 }
 
-function QuestPool({
+export function QuestPool({
   activePool,
   currentQuest,
   deckSeed,
@@ -1002,7 +1004,7 @@ function QuestPool({
   )
 }
 
-function QuestPill({
+export function QuestPill({
   className,
   children,
 }: {
@@ -1071,7 +1073,7 @@ function QuestIconAction({
   )
 }
 
-function Checklist({ title, items }: { title: string; items: string[] }) {
+export function Checklist({ title, items }: { title: string; items: string[] }) {
   return (
     <div>
       <h3 className="sidequest-display text-xl font-black text-[oklch(0.22_0.06_240)]">
@@ -1111,7 +1113,7 @@ function HeroStat({
   )
 }
 
-function StatTile({
+export function StatTile({
   icon: Icon,
   label,
   value,
