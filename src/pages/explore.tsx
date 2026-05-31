@@ -83,10 +83,10 @@ function useScrollDepthTracking(
   }, [rootRef, track])
 }
 
-function ExploreHeader({ onDeepSpaceClick }: { onDeepSpaceClick: () => void }) {
+function ExploreHeader() {
   return (
     <header className="relative">
-      <div className="mx-auto flex w-full max-w-7xl items-center justify-between px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex w-full max-w-7xl items-center px-4 py-4 sm:px-6 lg:px-8">
         <div className="flex items-center gap-2">
           <span className="flex h-8 w-8 items-center justify-center rounded-full border-2 border-[oklch(0.31_0.07_240)] bg-primary text-primary-foreground">
             <Compass className="h-4 w-4" aria-hidden />
@@ -95,17 +95,6 @@ function ExploreHeader({ onDeepSpaceClick }: { onDeepSpaceClick: () => void }) {
             Sidequest
           </span>
         </div>
-        <a
-          data-testid="explore-made-with-badge"
-          href={DEEPSPACE_URL}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={onDeepSpaceClick}
-          className="inline-flex items-center gap-1.5 rounded-full border-2 border-[oklch(0.31_0.07_240)] bg-card px-3 py-1.5 text-sm font-black text-foreground transition-transform hover:-translate-y-0.5 sidequest-mini-shadow"
-        >
-          Made with DeepSpace
-          <ArrowUpRight className="h-4 w-4" aria-hidden />
-        </a>
       </div>
     </header>
   )
@@ -301,7 +290,7 @@ export default function ExplorePage() {
   return (
     <div ref={rootRef} data-testid="explore-root" className="min-h-full bg-background text-foreground">
       <div className="sidequest-skyline" aria-hidden />
-      <ExploreHeader onDeepSpaceClick={() => trackDeepSpaceClick('header')} />
+      <ExploreHeader />
 
       <div className="relative mx-auto w-full max-w-7xl px-4 pb-10 pt-2 sm:px-6 lg:px-8">
         <section className="grid gap-5 lg:grid-cols-[minmax(0,0.88fr)_minmax(420px,1.12fr)] lg:items-start">

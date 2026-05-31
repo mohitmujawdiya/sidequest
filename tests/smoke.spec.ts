@@ -274,16 +274,15 @@ test.describe('Explore (auth-free landing)', () => {
     await expect(title).not.toHaveText(before ?? '')
   })
 
-  test('explore Made-with-DeepSpace links carry the UTM url and open in a new tab', async ({ page }) => {
+  test('explore Made-with-DeepSpace CTA carries the UTM url, opens in a new tab, and the header badge is gone', async ({ page }) => {
     await page.goto('/explore')
     await waitForExplore(page)
 
-    const badge = page.getByTestId('explore-made-with-badge')
-    await expect(badge).toBeVisible()
-    await expect(badge).toHaveAttribute('href', /^https:\/\/deep\.space\?utm_source=sidequest/)
-    await expect(badge).toHaveAttribute('target', '_blank')
+    // Header badge was removed — only the closing card converts now.
+    await expect(page.getByTestId('explore-made-with-badge')).toHaveCount(0)
 
     const cta = page.getByTestId('explore-deepspace-cta').getByRole('link')
+    await expect(cta).toHaveAttribute('href', /^https:\/\/deep\.space\?utm_source=sidequest/)
     await expect(cta).toHaveAttribute('href', /utm_campaign=reddit/)
     await expect(cta).toHaveAttribute('target', '_blank')
   })
