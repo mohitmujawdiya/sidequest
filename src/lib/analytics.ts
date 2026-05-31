@@ -13,6 +13,8 @@ export type AnalyticsEventType =
   | 'favorite_memory'
   | 'sign_in_prompt'
   | 'mascot_tap'
+  | 'deepspace_cta_click'
+  | 'scroll_depth'
 
 export interface AnalyticsEventRecord {
   eventType: AnalyticsEventType

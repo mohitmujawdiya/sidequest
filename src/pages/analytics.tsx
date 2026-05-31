@@ -41,6 +41,8 @@ const eventLabels: Record<AnalyticsEventType, string> = {
   favorite_memory: 'Favorite',
   sign_in_prompt: 'Sign-in prompt',
   mascot_tap: 'Mascot tap',
+  deepspace_cta_click: 'DeepSpace click',
+  scroll_depth: 'Scroll depth',
 }
 
 const funnelEvents: Array<{ event: AnalyticsEventType; label: string; icon: ComponentType<{ className?: string }> }> = [
@@ -128,6 +130,9 @@ function AnalyticsDashboard() {
             <AnalyticsStat label="7-day users" value={analytics.activeUsers7d.toString()} icon={Activity} />
             <AnalyticsStat label="Accept rate" value={formatPercent(analytics.acceptRate)} icon={MousePointerClick} />
             <AnalyticsStat label="Complete rate" value={formatPercent(analytics.completeRate)} icon={Trophy} />
+            <div className="sm:col-span-2">
+              <AnalyticsStat label="DeepSpace clicks" value={analytics.deepspaceClicks.toString()} icon={MousePointerClick} />
+            </div>
           </div>
         </section>
 
@@ -409,6 +414,7 @@ function buildAnalytics(records: EventRecord[], userRecords: UserRecord[]) {
     recent: sorted.slice(0, 12),
     routes,
     topQuests,
+    deepspaceClicks: eventCounts.get('deepspace_cta_click') ?? 0,
     totalEvents: sorted.length,
     totalSessions,
     totalUsers: sortedUsers.length,
