@@ -785,21 +785,9 @@ function QuestStage({
               </div>
             </div>
 
-          <div className="mt-5 grid gap-3 sm:grid-cols-3">
-            <StatTile icon={Trophy} label="Reward" value={`${quest.xp} XP`} />
-            <StatTile icon={Clock3} label="Time" value={quest.estimate} />
-            <StatTile icon={Map} label="Place" value={quest.setting} />
-          </div>
-
-          <div className="mt-4 rounded-lg border-2 border-[oklch(0.31_0.07_240)] bg-[oklch(0.91_0.12_88)] p-4 sidequest-mini-shadow">
-            <p className="text-base font-extrabold leading-7 text-[oklch(0.25_0.06_240)]">
-              {quest.prompt}
-            </p>
-          </div>
-
           <div
             data-testid="accept-sidequest-panel"
-            className="mt-4 rounded-lg border-2 border-[oklch(0.31_0.07_240)] bg-[oklch(0.985_0.018_93)] p-4 sidequest-mini-shadow"
+            className="mt-5 rounded-lg border-2 border-[oklch(0.31_0.07_240)] bg-[oklch(0.985_0.018_93)] p-4 sidequest-mini-shadow"
           >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <h3 className="sidequest-display text-2xl font-black leading-none text-[oklch(0.22_0.06_240)]">
@@ -855,6 +843,18 @@ function QuestStage({
                 Free to browse and do. Sign in to log your finishes, keep memories, and join the leaderboard.
               </p>
             )}
+          </div>
+
+          <div className="mt-4 grid gap-3 sm:grid-cols-3">
+            <StatTile icon={Trophy} label="Reward" value={`${quest.xp} XP`} />
+            <StatTile icon={Clock3} label="Time" value={quest.estimate} />
+            <StatTile icon={Map} label="Place" value={quest.setting} />
+          </div>
+
+          <div className="mt-4 rounded-lg border-2 border-[oklch(0.31_0.07_240)] bg-[oklch(0.91_0.12_88)] p-4 sidequest-mini-shadow">
+            <p className="text-base font-extrabold leading-7 text-[oklch(0.25_0.06_240)]">
+              {quest.prompt}
+            </p>
           </div>
 
           {isSignedIn && !syncReady && (
